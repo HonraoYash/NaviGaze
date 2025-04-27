@@ -1,0 +1,72 @@
+[
+  {
+    "lat": 37.7749,
+    "lon": -122.4194,
+    "image_path": "/kaggle/input/top-view-vehicle-detection-image-dataset/Vehicle_Detection_Image_Dataset/train/images/5_mp4-1_jpg.rf.dfea49ba73f794f7d8e354cf81f5a18f.jpg",
+    "adjusted_score": 167.62,
+    "llm_reason": "The provided coordinates are in San Francisco, near the Civic Center/Market Street area. A congestion score of 15 suggests relatively light traffic for this typically busy area. However, the Market Street corridor is known for heavy pedestrian and bicycle traffic, as well as public transit (buses and streetcars).  The area also experiences frequent double-parking and delivery vehicles, increasing the risk for incidents even with lighter traffic flow. The relatively high risk score of 75.06 may reflect these inherent area hazards."
+  },
+  {
+    "lat": 37.7752,
+    "lon": -122.419,
+    "image_path": "/kaggle/input/top-view-vehicle-detection-image-dataset/Vehicle_Detection_Image_Dataset/train/images/7_mp4-2_jpg.rf.cf40db58b437d06043b53e19d2e5f924.jpg",
+    "adjusted_score": 24.54,
+    "llm_reason": "The provided coordinates are near downtown San Francisco, specifically the Civic Center/Tenderloin area. A congestion score of 2 suggests slightly elevated traffic levels for the area.  While the typical traffic in this area can be heavy, particularly during peak commute hours, a score of 2 doesn't indicate significant congestion. However, this area is known for pedestrian and bicycle traffic, as well as the presence of public transportation and delivery vehicles. The combination of these factors increases the risk of incidents slightly even with moderate traffic levels."
+  },
+  {
+    "lat": 37.7749,
+    "lon": -122.4194,
+    "image_path": "/kaggle/input/top-view-vehicle-detection-image-dataset/Vehicle_Detection_Image_Dataset/train/images/8_mp4-44_jpg.rf.963a709ba0be12904630b0bb1b8d47b0.jpg",
+    "adjusted_score": 103.0,
+    "llm_reason": "The provided coordinates are in San Francisco, near the Civic Center/Market Street area. A congestion score of 10 indicates heavy traffic, which is typical for this area, especially during peak hours. Market Street has a mix of vehicle traffic, public transportation (buses, streetcars), and a high volume of pedestrians and cyclists. This increases the risk of incidents even at moderate speeds."
+  },
+  {
+    "lat": 37.7752,
+    "lon": -122.419,
+    "image_path": "/kaggle/input/top-view-vehicle-detection-image-dataset/Vehicle_Detection_Image_Dataset/train/images/10_mp4-11_jpg.rf.eb1b06090bd1c1814b87c18a2661990a.jpg",
+    "adjusted_score": 115.94,
+    "llm_reason": "Moderate congestion (score 12) near Market Street in San Francisco. This area experiences heavy pedestrian and bicycle traffic, especially during commute hours.  The presence of streetcars and frequent turns contribute to potential risks. While the congestion score is moderate, the area's inherent complexity warrants a slight risk increase."
+  },
+  {
+    "lat": 37.7755,
+    "lon": -122.4186,
+    "image_path": "/kaggle/input/top-view-vehicle-detection-image-dataset/Vehicle_Detection_Image_Dataset/valid/images/11_mp4-7_jpg.rf.c29830bf45870c97e8667ce13c0994a9.jpg",
+    "adjusted_score": 90.62,
+    "llm_reason": "The provided coordinates are near the heart of San Francisco (close to the Civic Center/Tenderloin area). A congestion score of 8 indicates significant traffic congestion, likely due to the high density of businesses, residential buildings, and tourism in this area.  While the risk score of 40.06 is already elevated, the typical presence of pedestrians, cyclists, and public transportation vehicles in this dense urban environment further increases the risk.  The Tenderloin in particular can experience unpredictable pedestrian and vehicular movement."
+  },
+  {
+    "lat": 37.7749,
+    "lon": -122.4194,
+    "image_path": "/kaggle/input/top-view-vehicle-detection-image-dataset/Vehicle_Detection_Image_Dataset/train/images/11_mp4-20_jpg.rf.07891e59b6d3fd6ff19d61eac9cdc89c.jpg",
+    "adjusted_score": 61.72,
+    "llm_reason": "The provided coordinates are in San Francisco, near the Civic Center/Market Street area. A congestion score of 7 indicates moderately heavy traffic. This area experiences significant pedestrian and bicycle traffic, especially during commute hours.  The presence of Market Street, a major thoroughfare with various public transportation options (BART, Muni), contributes to congestion and increases the risk of incidents.  While the risk score of 25.61 is moderate, the dense urban environment and mix of transportation modes warrant an additional risk factor."
+  },
+  {
+    "lat": 37.7752,
+    "lon": -122.419,
+    "image_path": "/kaggle/input/top-view-vehicle-detection-image-dataset/Vehicle_Detection_Image_Dataset/train/images/6_mp4-30_jpg.rf.eb11f9c9f408d358d4f5b46ab23c06c4.jpg",
+    "adjusted_score": 3.0,
+    "llm_reason": "Low congestion (score 1) suggests smooth traffic flow. However, the location is near downtown San Francisco (37.7752, -122.419), which typically experiences high pedestrian and bicycle traffic, especially during peak hours. This warrants a moderate risk addition despite the current low congestion score."
+  },
+  {
+    "lat": 37.7755,
+    "lon": -122.4186,
+    "image_path": "/kaggle/input/top-view-vehicle-detection-image-dataset/Vehicle_Detection_Image_Dataset/train/images/8_mp4-16_jpg.rf.93878bb2002cf485ccd73648a7fbab4b.jpg",
+    "adjusted_score": 102.5,
+    "llm_reason": "High congestion (score 9) near Market Street in San Francisco, known for heavy pedestrian and bicycle traffic, especially during commute hours.  Risk score of 45 suggests potential incidents or hazards already present, increasing risk further."
+  },
+  {
+    "lat": 37.7749,
+    "lon": -122.4194,
+    "image_path": "/kaggle/input/top-view-vehicle-detection-image-dataset/Vehicle_Detection_Image_Dataset/train/images/2_mp4-16_jpg.rf.4b04bbdd5fae04f213e3c91e9c4b1b7d.jpg",
+    "adjusted_score": 16.26,
+    "llm_reason": "The provided coordinates are in San Francisco, near the Civic Center/Market Street area. This area typically experiences moderate to heavy congestion, especially during peak hours. A congestion score of 3 suggests moderate traffic levels. The risk score of 5.38 is already elevated, likely due to the inherent complexity of navigating this area with its mix of vehicle types, pedestrians, and public transportation.  The additional risk accounts for the presence of Market Street's many transit lines, including buses and streetcars, which can create unpredictable traffic flow.  Bicyclists and scooter riders are also common, increasing the need for heightened awareness."
+  },
+  {
+    "lat": 37.7752,
+    "lon": -122.419,
+    "image_path": "/kaggle/input/top-view-vehicle-detection-image-dataset/Vehicle_Detection_Image_Dataset/train/images/5_mp4-14_jpg.rf.28be876c6996527d359df0fe43306fc5.jpg",
+    "adjusted_score": 245.84,
+    "llm_reason": "Light congestion (score 23) near San Francisco's SOMA district. This area experiences moderate traffic fluctuations due to proximity to downtown, including pedestrian and bicycle traffic, particularly during peak hours.  The higher risk score (110.02) suggests additional factors, potentially including road incidents or construction not reflected in the congestion score.  Slight risk addon warranted due to general urban driving complexity."
+  }
+]
