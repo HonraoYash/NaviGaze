@@ -103,15 +103,15 @@ pip install folium requests
 
 ## System Architecture
 <p align="center">
-  <img src="images/architecture1.png" alt="My Photo" width="400">
+  <img src="systemarchitecture1.jpeg" alt="My Photo" width="400">
 </p>
 <p align="center">
-  <img src="images/architecture2.png" alt="My Photo" width="400">
+  <img src="systemarchitecture2.jpeg" alt="My Photo" width="400">
 </p>
 
 ## User Interface
 <p align="center">
-  <img src="images/userinterface.jpeg" alt="My Photo" width="400">
+  <img src="userinterface.jpeg" alt="My Photo" width="400">
 </p>
 
 
