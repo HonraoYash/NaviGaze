@@ -23,7 +23,8 @@ for entry in risk_data:
     risk_lookup[key] = entry["adjusted_score"]
 
 
-app = Flask(__name__, static_url_path="/static", static_folder="static")
+app = Flask(__name__, static_folder="frontend_build", static_url_path="")
+
 CORS(app)
 
 client = openrouteservice.Client(key="5b3ce3597851110001cf6248ac3c4ef3926648e28cbbfda122d13aa0")
@@ -189,5 +190,21 @@ def generate_map():
 
     return jsonify({"map_url": f"/{output_file}"})
 
-if __name__ == "__main__":
-    app.run(debug=True)
+# if __name__ == "__main__":
+#     app.run(debug=True)
+
+
+@app.route('/')
+def serve_index():
+    return send_from_directory(app.static_folder, 'index.html')
+
+@app.route('/<path:path>')
+def serve_static(path):
+    file_path = os.path.join(app.static_folder, path)
+    if os.path.exists(file_path):
+        return send_from_directory(app.static_folder, path)
+    else:
+        return send_from_directory(app.static_folder, 'index.html')
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
