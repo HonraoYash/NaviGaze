@@ -187,6 +187,7 @@ def generate_map():
 
     output_file = "static/multi_route_visualized.html"
     visualize_two_routes_from_strings(route1_str, route2_str, output_file=output_file)
+    print("✅ Map saved at:", output_file)
 
     return jsonify({"map_url": f"/{output_file}"})
 
@@ -205,6 +206,11 @@ def serve_static(path):
         return send_from_directory(app.static_folder, path)
     else:
         return send_from_directory(app.static_folder, 'index.html')
+
+@app.route('/static/<path:filename>')
+def serve_static_files(filename):
+    return send_from_directory('static', filename)
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
