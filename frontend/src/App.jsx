@@ -105,7 +105,7 @@ export default function App() {
               <h2 className="text-xl font-bold text-green-700 mb-3">📍 Interactive Route Map</h2>
               {mapReady && (
                 <iframe
-                  src="https://navigaze.up.railway.app/static/multi_route_visualized.html"
+                  src={`https://navigaze.up.railway.app/static/multi_route_visualized.html?t=${Date.now()}`}
                   width="100%"
                   height="600"
                   className="rounded-md border border-gray-300"
