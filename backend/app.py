@@ -61,6 +61,7 @@ def visualize_two_routes_from_strings(route1_str, route2_str, output_file='stati
         folium.Marker(route2[-1], tooltip='Route 2 End', icon=folium.Icon(color='red')).add_to(route_map)
 
     route_map.save(output_file)
+    
 @app.route('/images/<filename>')
 def serve_image(filename):
     return send_from_directory(os.path.abspath('.'), filename)
