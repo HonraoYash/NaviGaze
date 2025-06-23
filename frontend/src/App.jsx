@@ -12,7 +12,7 @@ export default function App() {
 
   const handleBuildGraph = async () => {
     try {
-      const res = await axios.post("https://navigaze.up.railway.app/build-graph", {
+      const res = await axios.post("/build-graph", {
         source,
         destination,
       });
@@ -22,7 +22,7 @@ export default function App() {
 
       if (newRoutes.length > 1) {
         // wait until the map is definitely created
-        await await axios.post("https://navigaze.up.railway.app/generate-map", {
+        await await axios.post("/generate-map", {
           route1: newRoutes[0].best_path,
           route2: newRoutes[1].best_path,
         });
@@ -105,7 +105,7 @@ export default function App() {
               <h2 className="text-xl font-bold text-green-700 mb-3">📍 Interactive Route Map</h2>
               {mapReady && (
                 <iframe
-                  src={`https://navigaze.up.railway.app/static/multi_route_visualized.html?t=${Date.now()}`}
+                  src={`/static/multi_route_visualized.html?t=${Date.now()}`}
                   width="100%"
                   height="600"
                   className="rounded-md border border-gray-300"
