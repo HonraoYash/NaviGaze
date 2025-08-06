@@ -1,6 +1,7 @@
 # NaviGaze
 
-NaviGaze is an AI-enhanced route planning system that intelligently reranks driving routes by considering both travel time and safety. Instead of just suggesting the fastest path, NaviGaze adjusts route priorities based on **risk scores** calculated from **satellite imagery** analysis and **real-world context** (using YOLO object detection and LLM summarization). It aims to make navigation safer by detecting and avoiding high-risk areas such as blind spots, congestion, and poorly lit intersections.
+NaviGaze is an AI-enhanced route planning system that intelligently **reranks** (Custom Ranking Logic) driving routes by considering both travel time, traffic and safety. Instead of just suggesting the fastest path, NaviGaze adjusts route priorities based on **risk scores** calculated from live **satellite imagery** analysis and **real-world context** (using YOLO object detection and LLM summarization). It aims to make navigation safer by detecting and avoiding high-risk areas such as blind spots, congestion, and poorly lit intersections.
+
 
 ---
 
