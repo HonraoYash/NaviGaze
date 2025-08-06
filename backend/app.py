@@ -31,10 +31,17 @@ client = openrouteservice.Client(key="5b3ce3597851110001cf6248ac3c4ef3926648e28c
 
 city_coords = {
     "San Francisco": [-122.4194, 37.7749],
-    "Los Angeles": [-118.2437, 34.0522],
     "San Jose": [-121.8863, 37.3382],
-    "Sacramento": [-121.4944, 38.5816],
+    "Oakland": [-122.2711, 37.8044],
+    "Palo Alto": [-122.1430, 37.4419],
+    "Mountain View": [-122.0838, 37.3861],
+    "Santa Clara": [-121.9552, 37.3541],
+    "Fremont": [-121.9886, 37.5483],
+    "Sunnyvale": [-122.0363, 37.3688],
+    "Milpitas": [-121.9066, 37.4323],
+    "Cupertino": [-122.0322, 37.3229],
 }
+
 def visualize_two_routes_from_strings(route1_str, route2_str, output_file='static/multi_route_visualized.html'):
     def parse_coordinates(route_str):
         matches = re.findall(r'\(([-\d.]+), ([-\d.]+)\)', route_str)
@@ -214,4 +221,4 @@ def serve_static_files(filename):
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
+    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5001)))

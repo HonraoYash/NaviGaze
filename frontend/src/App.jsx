@@ -1,16 +1,29 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-const cities = ["San Francisco", "Los Angeles", "San Jose", "Sacramento"];
+const cities = [
+  "San Francisco",
+  "San Jose",
+  "Oakland",
+  "Palo Alto",
+  "Mountain View",
+  "Santa Clara",
+  "Fremont",
+  "Sunnyvale",
+  "Milpitas",
+  "Cupertino"
+];
 
 export default function App() {
   const [source, setSource] = useState("San Francisco");
-  const [destination, setDestination] = useState("Los Angeles");
+  const [destination, setDestination] = useState("San Jose");
   const [routes, setRoutes] = useState([]);
   const [mapReady, setMapReady] = useState(false);
+  const [loading, setLoading] = useState(false);
 
 
   const handleBuildGraph = async () => {
+    setLoading(true);
     try {
       const res = await axios.post("/build-graph", {
         source,
@@ -20,18 +33,20 @@ export default function App() {
       setRoutes(newRoutes);
       setMapReady(false); // clear old state first
 
-      if (newRoutes.length > 1) {
-        // wait until the map is definitely created
-        await await axios.post("/generate-map", {
+      if (newRoutes.length > 0) {
+        await axios.post("/generate-map", {
           route1: newRoutes[0].best_path,
-          route2: newRoutes[1].best_path,
+          route2: newRoutes[1]?.best_path || [],
         });
         setMapReady(true);
       }
+      
 
     } catch (err) {
       console.error("Error:", err);
       setMapReady(false);
+    } finally {
+      setLoading(false);  // ✅ Always turn off spinner
     }
   };
 
@@ -70,10 +85,22 @@ export default function App() {
 
         <button
           onClick={handleBuildGraph}
-          className="bg-blue-600 text-white px-4 py-3 rounded text-lg hover:bg-blue-700 transition"
-        >
+          disabled={loading}
+          className={`bg-blue-600 text-white px-4 py-3 rounded text-lg transition ${
+            loading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-700'
+          }`}        >
           🚀 Build and Rank Route
         </button>
+        {loading && (
+  <div className="flex items-center justify-center gap-2 text-blue-700 text-lg mt-2">
+    <svg className="animate-spin h-5 w-5 text-blue-500" viewBox="0 0 24 24">
+      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
+    </svg>
+    Loading routes and map...
+  </div>
+)}
+
       </div>
 
       {/* Route Cards */}
@@ -85,8 +112,9 @@ export default function App() {
               className="flex-1 min-w-[320px] max-w-[48%] bg-white p-6 rounded-2xl shadow-xl border border-gray-200 transition-transform hover:scale-[1.01]"
             >
               <h2 className="text-xl font-semibold mb-3 text-blue-700 flex items-center gap-2">
-                {idx === 0 ? "🔴 Fast Route" : "🔵 Safe Route"}
-              </h2>
+  {route.duration_sec < routes[1 - idx]?.duration_sec ? "🔴 Fast Route" : "🔵 Safe Route"}
+</h2>
+
 
               <div className="flex gap-4 mb-2">
                 <span className="bg-blue-100 text-blue-800 text-sm font-semibold px-3 py-1 rounded-full">
