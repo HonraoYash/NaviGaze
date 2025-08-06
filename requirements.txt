@@ -1,0 +1,8 @@
+Flask
+flask-cors
+openrouteservice
+networkx
+geopy
+matplotlib
+folium
+gunicorn
