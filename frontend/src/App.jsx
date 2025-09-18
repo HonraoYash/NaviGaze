@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 // Restoring axios for actual API calls
 import axios from 'axios'
 
+// This is the main App component for the NaviGaze app.
 // --- Helper Components for Icons ---
 // Using inline SVGs for icons to keep it self-contained and performant.
 const ArrowRightIcon = () => (
