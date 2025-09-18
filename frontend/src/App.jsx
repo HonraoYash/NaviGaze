@@ -1,10 +1,8 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 // Restoring axios for actual API calls
 import axios from 'axios'
 
-// This is the main App component for the NaviGaze app.
 // --- Helper Components for Icons ---
-// Using inline SVGs for icons to keep it self-contained and performant.
 const ArrowRightIcon = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -97,7 +95,6 @@ const MapPinIcon = () => (
 
 // --- Main App Component ---
 export default function App() {
-  // A slightly expanded list of cities for more options.
   const cities = [
     'San Francisco',
     'San Jose',
@@ -121,25 +118,35 @@ export default function App() {
   const [loading, setLoading] = useState(false)
   const [showResults, setShowResults] = useState(false)
 
-  // --- Restored API call logic ---
+  // Initialize default map on component mount
+  useEffect(() => {
+    // Create a default California map view
+    const initializeDefaultMap = async () => {
+      try {
+        // You can modify this to show a default California view
+        // For now, it will show the default view when no routes are loaded
+        setMapReady(true)
+      } catch (error) {
+        console.error('Error initializing default map:', error)
+      }
+    }
+    
+    initializeDefaultMap()
+  }, [])
+
   const handleBuildGraph = async () => {
     if (!source || !destination || source === destination) {
-      // Simple validation to prevent unnecessary API calls
       console.warn('Source and destination must be selected and different.')
       return
     }
     setLoading(true)
     setShowResults(false)
     setRoutes([])
-    setMapReady(false)
 
     try {
-      // Original axios call to build the graph
       const res = await axios.post('/build-graph', { source, destination })
       const newRoutes = res.data.routes || []
 
-      // To handle the edge case, we need to find the safest route by risk score
-      // The fastest is already determined by sorting by duration
       const sortedByDuration = [...newRoutes].sort(
         (a, b) => a.duration_sec - b.duration_sec
       )
@@ -147,7 +154,6 @@ export default function App() {
         (a, b) => a.risk_score - b.risk_score
       )
 
-      // Add flags to each route object
       const processedRoutes = sortedByDuration.map((route, idx) => {
         const isFastest = idx === 0
         const isSafest = route === sortedByRisk[0]
@@ -156,20 +162,17 @@ export default function App() {
 
       setRoutes(processedRoutes)
 
-      // Original axios call to generate the map if routes are found
       if (processedRoutes.length > 0) {
         await axios.post('/generate-map', {
           route1: processedRoutes[0].best_path,
           route2: processedRoutes[1]?.best_path || [],
         })
-        setMapReady(true)
       }
     } catch (err) {
       console.error('Error building graph or generating map:', err)
-      setMapReady(false) // Ensure map isn't shown on error
     } finally {
       setLoading(false)
-      setShowResults(true) // Trigger the fade-in animation for results
+      setShowResults(true)
     }
   }
 
@@ -207,19 +210,37 @@ export default function App() {
   }
 
   return (
-    // --- Main container with gradient background ---
-    <div className="min-h-screen w-full bg-slate-900 text-white font-sans p-4 sm:p-6 lg:p-8">
-      <div className="absolute inset-0 -z-10 h-full w-full bg-slate-900 bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:14px_24px]">
-        <div className="absolute left-0 right-0 top-0 -z-10 m-auto h-[310px] w-[310px] rounded-full bg-fuchsia-400 opacity-20 blur-[100px]"></div>
+    // --- Main container with fullscreen map ---
+    <div className="relative min-h-screen w-full overflow-hidden">
+      
+      {/* --- Fullscreen Background Map --- */}
+      <div className="absolute inset-0 z-0">
+        {mapReady ? (
+          <iframe
+            src={`/static/multi_route_visualized.html?t=${Date.now()}`}
+            width="100%"
+            height="100%"
+            className="border-none"
+            title="Route Map"
+          />
+        ) : (
+          // Default background while loading
+          <div className="w-full h-full bg-slate-900 bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:14px_24px]">
+            <div className="absolute left-0 right-0 top-0 -z-10 m-auto h-[310px] w-[310px] rounded-full bg-fuchsia-400 opacity-20 blur-[100px]"></div>
+          </div>
+        )}
       </div>
 
-      <div className="max-w-5xl mx-auto">
+      {/* --- Overlay UI Elements --- */}
+      <div className="relative z-10 min-h-screen w-full text-white font-sans p-4 sm:p-6 lg:p-8 pointer-events-none">
+        <div className="pointer-events-auto">
+        
         {/* --- Header Section --- */}
-        <header className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-sky-400 mb-4">
+        <header className="text-center mb-8 pointer-events-auto">
+          <h1 className="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-sky-400 mb-4 drop-shadow-lg">
             NaviGaze
           </h1>
-          <p className="text-slate-400 max-w-2xl mx-auto text-sm md:text-base">
+          <p className="text-white/90 max-w-2xl mx-auto text-sm md:text-base bg-black/30 backdrop-blur-sm rounded-lg p-3">
             <i>Every journey has options. NaviGaze analyzes real-time data to rank
             your routes by both speed and safety. Choose{' '}
             <span className="text-rose-400 font-semibold">Fast</span> or{' '}
@@ -228,116 +249,119 @@ export default function App() {
           </p>
         </header>
 
-        {/* --- Form Section with Glassmorphism Effect --- */}
-        <div className="bg-slate-800/50 backdrop-blur-lg border border-slate-700 rounded-2xl p-6 md:p-8 shadow-2xl shadow-black/20 mb-12">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
-            {/* Source Dropdown */}
-            <div className="relative">
-              <label className="absolute -top-2.5 left-4 text-xs text-slate-400 bg-slate-800 px-1 z-10">
-                From
-              </label>
-              <MapPinIcon />
-              <select
-                className="relative w-full pl-10 pr-4 py-3 bg-transparent border border-slate-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none transition-all appearance-none"
-                value={source}
-                onChange={(e) => setSource(e.target.value)}
-              >
-                {cities.map((city) => (
-                  <option
-                    className="bg-slate-800 text-white"
-                    key={`src-${city}`}
-                    value={city}
-                  >
-                    {city}
-                  </option>
-                ))}
-              </select>
-            </div>
+        {/* --- Form Section with Enhanced Glassmorphism --- */}
+        <div className="max-w-4xl mx-auto mb-8 pointer-events-auto">
+          <div className="bg-slate-900/70 backdrop-blur-xl border border-slate-700/50 rounded-2xl p-6 md:p-8 shadow-2xl shadow-black/40">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
+              
+              {/* Source Dropdown */}
+              <div className="relative">
+                <label className="absolute -top-2.5 left-4 text-xs text-slate-300 bg-slate-900/90 px-2 z-10 rounded">
+                  From
+                </label>
+                <MapPinIcon />
+                <select
+                  className="relative w-full pl-10 pr-4 py-3 bg-slate-800/80 backdrop-blur-sm border border-slate-600/50 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none transition-all appearance-none text-white"
+                  value={source}
+                  onChange={(e) => setSource(e.target.value)}
+                >
+                  {cities.map((city) => (
+                    <option
+                      className="bg-slate-800 text-white"
+                      key={`src-${city}`}
+                      value={city}
+                    >
+                      {city}
+                    </option>
+                  ))}
+                </select>
+              </div>
 
-            {/* Destination Dropdown */}
-            <div className="relative">
-              <label className="absolute -top-2.5 left-4 text-xs text-slate-400 bg-slate-800 px-1 z-10">
-                To
-              </label>
-              <MapPinIcon />
-              <select
-                className="relative w-full pl-10 pr-4 py-3 bg-transparent border border-slate-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none transition-all appearance-none"
-                value={destination}
-                onChange={(e) => setDestination(e.target.value)}
-              >
-                {cities.map((city) => (
-                  <option
-                    className="bg-slate-800 text-white"
-                    key={`dest-${city}`}
-                    value={city}
-                  >
-                    {city}
-                  </option>
-                ))}
-              </select>
-            </div>
+              {/* Destination Dropdown */}
+              <div className="relative">
+                <label className="absolute -top-2.5 left-4 text-xs text-slate-300 bg-slate-900/90 px-2 z-10 rounded">
+                  To
+                </label>
+                <MapPinIcon />
+                <select
+                  className="relative w-full pl-10 pr-4 py-3 bg-slate-800/80 backdrop-blur-sm border border-slate-600/50 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none transition-all appearance-none text-white"
+                  value={destination}
+                  onChange={(e) => setDestination(e.target.value)}
+                >
+                  {cities.map((city) => (
+                    <option
+                      className="bg-slate-800 text-white"
+                      key={`dest-${city}`}
+                      value={city}
+                    >
+                      {city}
+                    </option>
+                  ))}
+                </select>
+              </div>
 
-            {/* --- Submit Button --- */}
-            <button
-              onClick={handleBuildGraph}
-              disabled={loading}
-              className="w-full col-span-1 md:col-span-1 flex items-center justify-center gap-2 p-3 text-white font-semibold rounded-lg bg-gradient-to-r from-purple-600 to-blue-600 shadow-lg shadow-purple-600/30 transition-all duration-300 ease-in-out transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:scale-100"
-            >
-              {loading ? (
-                <>
-                  <svg
-                    className="animate-spin h-5 w-5"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <circle
-                      className="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      strokeWidth="4"
-                    ></circle>
-                    <path
-                      className="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                    ></path>
-                  </svg>
-                  Analyzing...
-                </>
-              ) : (
-                <>
-                  <ArrowRightIcon />
-                  Find Routes
-                </>
-              )}
-            </button>
+              {/* Submit Button */}
+              <button
+                onClick={handleBuildGraph}
+                disabled={loading}
+                className="w-full flex items-center justify-center gap-2 p-3 text-white font-semibold rounded-lg bg-gradient-to-r from-purple-600 to-blue-600 shadow-lg shadow-purple-600/30 transition-all duration-300 ease-in-out transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:scale-100"
+              >
+                {loading ? (
+                  <>
+                    <svg
+                      className="animate-spin h-5 w-5"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      ></path>
+                    </svg>
+                    Analyzing...
+                  </>
+                ) : (
+                  <>
+                    <ArrowRightIcon />
+                    Find Routes
+                  </>
+                )}
+              </button>
+            </div>
           </div>
         </div>
 
-        {/* --- Results Section --- */}
-        {showResults && (
-          <div
-            className={`transition-opacity duration-700 ease-in-out ${
-              showResults ? 'opacity-100' : 'opacity-0'
-            }`}
-          >
-            {routes.length > 0 && (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        {/* --- Results Section (Overlaid on map) --- */}
+        {showResults && routes.length > 0 && (
+          <div className="max-w-4xl mx-auto pointer-events-auto">
+            <div
+              className={`transition-opacity duration-700 ease-in-out ${
+                showResults ? 'opacity-100' : 'opacity-0'
+              }`}
+            >
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {routes.map((route, idx) => {
                   const style = getRouteCardStyle(route)
                   return (
                     <div
                       key={idx}
-                      className={`bg-slate-800/50 backdrop-blur-lg border ${style.borderColor} rounded-xl p-6 shadow-lg ${style.shadowColor} transition-all hover:border-white/50 hover:scale-[1.02]`}
+                      className={`bg-slate-900/80 backdrop-blur-xl border ${style.borderColor} rounded-xl p-6 shadow-2xl ${style.shadowColor} transition-all hover:border-white/50 hover:scale-[1.02]`}
                     >
                       <h2 className="text-xl font-bold mb-4 flex items-center">
                         {route.isFastest && route.isSafest && <SparklesIcon />}
                         <span className={style.labelColor}>{style.label}</span>
                       </h2>
-                      <div className="space-y-3 text-slate-300">
+                      <div className="space-y-3 text-slate-200">
                         <p className="flex items-center">
                           <ClockIcon />
                           Duration:{' '}
@@ -357,34 +381,10 @@ export default function App() {
                   )
                 })}
               </div>
-            )}
-
-            {/* --- Map Section --- */}
-            {mapReady ? (
-              <div className="bg-slate-800/50 backdrop-blur-lg border border-slate-700 rounded-xl shadow-2xl shadow-black/20 overflow-hidden">
-                <h3 className="text-lg font-semibold text-center py-4 px-4 bg-slate-900/50 border-b border-slate-700">
-                  Interactive Route Map
-                </h3>
-                <div className="w-full h-[400px] md:h-[500px] bg-slate-900">
-                  <iframe
-                    src={`/static/multi_route_visualized.html?t=${Date.now()}`}
-                    width="100%"
-                    height="100%"
-                    className="border-none"
-                    title="Route Map"
-                  />
-                </div>
-              </div>
-            ) : (
-              !loading &&
-              routes.length > 0 && (
-                <div className="text-center text-slate-400">
-                  Generating map visualization...
-                </div>
-              )
-            )}
+            </div>
           </div>
         )}
+        </div>
       </div>
     </div>
   )
